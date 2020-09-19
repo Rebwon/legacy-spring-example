@@ -1,27 +1,22 @@
 package com.rebwon.spring;
 
-import com.rebwon.spring.service.ConversionService;
-import java.util.Locale;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.connector.Connector;
+import org.apache.catalina.startup.Tomcat;
 
 public class Application {
 
-  public static void main(String[] args) {
-    AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
-    ConfigurableEnvironment environment = applicationContext.getEnvironment();
-    environment.setActiveProfiles("rebwon");
-    applicationContext.register(AppConfig.class);
-    applicationContext.refresh();
+  public static void main(String[] args) throws LifecycleException {
+    Tomcat tomcat = new Tomcat();
+    tomcat.setBaseDir("out/webapp");
+    Connector connector = tomcat.getConnector();
+    connector.setURIEncoding(StandardCharsets.UTF_8.displayName());
 
-    BasicService basicService = applicationContext.getBean(BasicService.class);
-    ConversionService conversionService = applicationContext.getBean(ConversionService.class);
-    String property = environment.getProperty("spring.application.name");
-    String message = applicationContext
-        .getMessage("argument.required", new Object[]{"rebwon"}, Locale.getDefault());
-    System.out.println(message);
-    System.out.println(property);
-    System.out.println(basicService);
-    System.out.println(conversionService);
+    tomcat.addWebapp("", new File("src/main/webapp").getAbsolutePath());
+    tomcat.setPort(8080);
+    tomcat.start();
+    tomcat.getServer().await();
   }
 }
