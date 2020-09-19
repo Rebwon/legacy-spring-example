@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-@ComponentScan({"com.rebwon.spring.web"})
+@ComponentScan({"com.rebwon.spring.*"})
 @EnableWebMvc
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
